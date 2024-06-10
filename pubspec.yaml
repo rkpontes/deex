@@ -1,0 +1,22 @@
+name: deex
+description: State management to Apps Flutter.
+version: 0.0.1
+homepage: https://github.com/rkpontes/deex
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  web: ">=0.4.0 <0.6.0"
+
+dev_dependencies:
+  flutter_lints: ^4.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
