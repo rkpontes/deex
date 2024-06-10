@@ -73,10 +73,10 @@ mixin ScrollMixin on DeexLifeCycleMixin {
   }
 }
 
-/// A clean controller to be used with only Rx variables
-abstract class RxController with DeexLifeCycleMixin {}
+/// A clean store to be used with only Rx variables
+abstract class RxStore with DeexLifeCycleMixin {}
 
-/// A recommended way to use Getx with Future fetching
+/// A recommended way to use Deex with Future fetching
 abstract class StateController<T> extends DeexStore with StateMixin<T> {}
 
 /// A controller with super lifecycles (including native lifecycles)

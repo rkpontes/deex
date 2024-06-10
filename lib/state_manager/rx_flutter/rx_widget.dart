@@ -5,21 +5,21 @@ import '../simple/simple_builder.dart';
 
 typedef WidgetCallback = Widget Function();
 
-/// The [RxWidget] is the base for all GetX reactive widgets
+/// The [RxWidget] is the base for all Deex reactive widgets
 ///
 /// See also:
 /// - [Deex]
-/// - [RxValue]
+/// - [DeexValue]
 abstract class RxWidget extends DeexStatelessWidget {
   const RxWidget({super.key});
 }
 
-/// The simplest reactive widget in GetX.
+/// The simplest reactive widget in Deex.
 ///
 /// Just pass your Rx variable in the root scope of the callback to have it
 /// automatically registered for changes.
 ///
-/// final _name = "GetX".obs;
+/// final _name = "Deex".obs;
 /// Obx(() => Text( _name.value )),... ;
 class Deex extends RxWidget {
   final WidgetCallback builder;
@@ -32,22 +32,22 @@ class Deex extends RxWidget {
   }
 }
 
-/// Similar to Obx, but manages a local state.
+/// Similar to Deex, but manages a local state.
 /// Pass the initial data in constructor.
 /// Useful for simple local states, like toggles, visibility, themes,
 /// button states, etc.
 ///  Sample:
-///    ObxValue((data) => Switch(
+///    DeexValue((data) => Switch(
 ///      value: data.value,
 ///      onChanged: (flag) => data.value = flag,
 ///    ),
 ///    false.obs,
 ///   ),
-class RxValue<T extends DeexInterface> extends RxWidget {
+class DeexValue<T extends DeexInterface> extends RxWidget {
   final Widget Function(T) builder;
   final T data;
 
-  const RxValue(this.builder, this.data, {super.key});
+  const DeexValue(this.builder, this.data, {super.key});
 
   @override
   Widget build(BuildContext context) => builder(data);

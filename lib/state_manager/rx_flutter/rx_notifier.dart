@@ -198,7 +198,6 @@ class Value<T> extends ListNotifier
 
   void update(T Function(T? value) fn) {
     value = fn(value);
-    // refresh();
   }
 
   @override
