@@ -1,5 +1,6 @@
 import 'package:deex/state_manager/rx_flutter/rx_widget.dart';
 import 'package:example/controller.dart';
+import 'package:example/request_controller.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   final controller = Controller();
+  final stateController = RequestController();
 
   MyHomePage({super.key});
 
@@ -42,24 +44,45 @@ class MyHomePage extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Deex(
-              () => Text(
-                '${controller.count.value}',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ),
+            _increment(context),
+            const SizedBox(height: 40),
+            _buttonWithState(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: controller.increment,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+
+  Widget _buttonWithState() {
+    return Deex(() {
+      return ElevatedButton(
+        onPressed: stateController.sendRequest,
+        child: Text(
+          stateController.state.value.message,
+        ),
+      );
+    });
+  }
+
+  Widget _increment(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        children: [
+          const Text('You have pushed the button this many times:'),
+          Deex(
+            () => Text(
+              '${controller.count.value}',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: controller.increment,
+            child: const Text('Increment'),
+          ),
+        ],
       ),
     );
   }
