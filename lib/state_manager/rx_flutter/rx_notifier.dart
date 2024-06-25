@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:deex/state_manager/simple/simple_builder.dart';
+import 'package:deex/state_manager/widgets/simple_builder.dart';
 import 'package:deex/utils/equality/equality.dart';
 
 import '../../instance/lifecycle.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../rx/rx_types/rx_types.dart';
-import '../simple/list_notifier.dart';
+import '../widgets/list_notifier.dart';
 
 extension _Empty on Object {
   bool _isEmpty() {

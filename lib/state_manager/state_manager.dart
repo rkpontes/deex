@@ -1,2 +1,2 @@
 export 'rx_flutter/rx_flutter.dart';
-export 'simple/simple.dart';
+export 'widgets/widgets.dart';

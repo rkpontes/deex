@@ -4,25 +4,28 @@ import 'package:flutter/widgets.dart';
 
 import 'list_notifier.dart';
 
+/// Defines a callback that takes a value of generic type T and returns nothing
 typedef ValueBuilderUpdateCallback<T> = void Function(T snapshot);
+
+/// Defines a callback that takes a value of generic type T and an updater, and returns a Widget
 typedef ValueBuilderBuilder<T> = Widget Function(
     T snapshot, ValueBuilderUpdateCallback<T> updater);
 
-/// Manages a local state like ObxValue, but uses a callback instead of
-/// a Rx value.
+/// Manages a local state like ObxValue, but uses a callback instead of a Rx value.
 ///
 /// Example:
 /// ```
-///  ValueBuilder<bool>(
-///    initialValue: false,
-///    builder: (value, update) => Switch(
-///    value: value,
-///    onChanged: (flag) {
-///       update( flag );
-///    },),
-///    onUpdate: (value) => print("Value updated: $value"),
-///  ),
-///  ```
+/// ValueBuilder<bool>(
+///   initialValue: false,
+///   builder: (value, update) => Switch(
+///     value: value,
+///     onChanged: (flag) {
+///       update(flag);
+///     },
+///   ),
+///   onUpdate: (value) => print("Value updated: $value"),
+/// ),
+/// ```
 class ValueBuilder<T> extends StatefulWidget {
   final T initialValue;
   final ValueBuilderBuilder<T> builder;
@@ -40,6 +43,21 @@ class ValueBuilder<T> extends StatefulWidget {
   @override
   ValueBuilderState<T> createState() => ValueBuilderState<T>();
 }
+
+/// Manages local state like ObxValue, but uses a callback instead of an Rx value.
+///
+/// Example:
+/// ```
+///  ValueBuilder<bool>(
+///    initialValue: false,
+///    builder: (value, update) => Switch(
+///    value: value,
+///    onChanged: (flag) {
+///       update( flag );
+///    },),
+///    onUpdate: (value) => print("value updated: $value"),
+///  ),
+///  ```
 
 class ValueBuilderState<T> extends State<ValueBuilder<T>> {
   late T value;
@@ -73,9 +91,10 @@ class ValueBuilderState<T> extends State<ValueBuilder<T>> {
   }
 }
 
+/// DeexElement is a class that extends StatelessElement and mixes in StatelessObserverComponent
 class DeexElement = StatelessElement with StatelessObserverComponent;
 
-// It's a experimental feature
+/// It's a experimental feature
 class Observer extends DeexStatelessWidget {
   final WidgetBuilder builder;
 
@@ -85,7 +104,7 @@ class Observer extends DeexStatelessWidget {
   Widget build(BuildContext context) => builder(context);
 }
 
-/// A StatelessWidget than can listen reactive changes.
+/// A StatelessWidget that can listen to reactive changes.
 abstract class DeexStatelessWidget extends StatelessWidget {
   /// Initializes [key] for subclasses.
   const DeexStatelessWidget({super.key});
@@ -93,7 +112,7 @@ abstract class DeexStatelessWidget extends StatelessWidget {
   StatelessElement createElement() => DeexElement(this);
 }
 
-/// a Component that can track changes in a reactive variable
+/// A component that can track changes in a reactive variable
 mixin StatelessObserverComponent on StatelessElement {
   List<Disposer>? disposers = <Disposer>[];
 
