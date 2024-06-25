@@ -2,29 +2,106 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 
-// This callback remove the listener on addListener function
+/// This callback removes the listener added by the addListener function.
 typedef Disposer = void Function();
 
-// replacing StateSetter, return if the Widget is mounted for extra validation.
-// if it brings overhead the extra call,
+/// Replaces StateSetter, returning if the Widget is mounted for extra validation.
 typedef DeexStateUpdate = void Function();
 
+/// A ListNotifier with both single and group listener support.
 class ListNotifier extends Listenable
     with ListNotifierSingleMixin, ListNotifierGroupMixin {}
 
 /// A Notifier with single listeners
+///
+/// Example:
+/// ```
+/// class MyWidget extends StatefulWidget {
+///   @override
+///   _MyWidgetState createState() => _MyWidgetState();
+/// }
+///
+/// class _MyWidgetState extends State<MyWidget> {
+///   final ListNotifierSingle _notifier = ListNotifierSingle();
+///   @override
+///   void initState() {
+///     super.initState();
+///     _notifier.addListener(() {
+///       setState(() {});
+///     });
+///   }
+///
+///   @override
+///   void dispose() {
+///     _notifier.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return ElevatedButton(
+///       onPressed: () {
+///         _notifier.refresh();
+///       },
+///       child: Text('Refresh'),
+///     );
+///   }
+/// }
+///```
 class ListNotifierSingle = ListNotifier with ListNotifierSingleMixin;
 
-/// A notifier with group of listeners identified by id
+/// A notifier with a group of listeners identified by an ID.
+///
+/// Example:
+/// ```
+/// class MyGroupWidget extends StatefulWidget {
+///   @override
+///   _MyGroupWidgetState createState() => _MyGroupWidgetState();
+/// }
+///
+/// class _MyGroupWidgetState extends State<MyGroupWidget> {
+///   final ListNotifierGroup _notifier = ListNotifierGroup();
+///
+///   @override
+///   void initState() {
+///     super.initState();
+///     _notifier.addListenerId('button1', () {
+///       setState(() {});
+///     });
+///   }
+///
+///   @override
+///   void dispose() {
+///     _notifier.dispose();
+///     super.dispose();
+///   }
+///
+///   @override
+///   Widget build(BuildContext context) {
+///     return Column(
+///       children: [
+///         ElevatedButton(
+///           onPressed: () {
+///             _notifier.refreshGroup('button1');
+///           },
+///           child: Text('Refresh Button 1'),
+///         ),
+///         ElevatedButton(
+///           onPressed: () {
+///             _notifier.refreshGroup('button2');
+///           },
+///           child: Text('Refresh Button 2'),
+///         ),
+///       ],
+///     );
+///   }
+/// }
+/// ```
 class ListNotifierGroup = ListNotifier with ListNotifierGroupMixin;
 
-/// This mixin add to Listenable the addListener, removerListener and
-/// containsListener implementation
+/// This mixin adds addListener, removeListener, and containsListener implementation to Listenable.
 mixin ListNotifierSingleMixin on Listenable {
   List<DeexStateUpdate>? _updaters = <DeexStateUpdate>[];
-
-  // final int _version = 0;
-  // final int _microtaskVersion = 0;
 
   @override
   Disposer addListener(DeexStateUpdate listener) {
@@ -99,6 +176,7 @@ mixin ListNotifierSingleMixin on Listenable {
   }
 }
 
+/// This mixin adds group listener support to Listenable.
 mixin ListNotifierGroupMixin on Listenable {
   HashMap<Object?, ListNotifierSingleMixin>? _updatersGroupIds =
       HashMap<Object?, ListNotifierSingleMixin>();
@@ -155,15 +233,15 @@ mixin ListNotifierGroupMixin on Listenable {
     return _updatersGroupIds![key]!.addListener(listener);
   }
 
-  /// To dispose an [id] from future updates(), this ids are registered
-  /// by `Deex()` or similar, so is a way to unlink the state change with
-  /// the Widget from the Controller.
+  /// Disposes an [id] to prevent future updates.
+  /// These IDs are registered by `Deex()` or similar, allowing unlinking of state changes from the Widget to the Controller.
   void disposeId(Object id) {
     _updatersGroupIds?[id]?.dispose();
     _updatersGroupIds!.remove(id);
   }
 }
 
+/// Singleton class that manages notifiers.
 class Notifier {
   Notifier._();
 
@@ -195,6 +273,7 @@ class Notifier {
   }
 }
 
+/// Class representing the data for notifications.
 class NotifyData {
   const NotifyData(
       {required this.updater,
@@ -205,6 +284,7 @@ class NotifyData {
   final bool throwException;
 }
 
+/// Error class for Deex errors.
 class DeexError {
   const DeexError();
   @override

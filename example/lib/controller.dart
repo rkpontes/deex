@@ -1,5 +1,5 @@
 import 'package:deex/rx/rx_types/rx_types.dart';
-import 'package:deex/state_manager/simple/deex_store.dart';
+import 'package:deex/state_manager/widgets/deex_store.dart';
 
 class Controller extends DeexStore {
   List<String> titles = [

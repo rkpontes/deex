@@ -145,6 +145,172 @@ class ErrorRequestState extends RequestState {
 
 This approach allows for efficient state management, ensuring that the user interface always reflects the most recent state of the application.
 
+## DeexConsumer
+
+The `DeexConsumer` is a Flutter widget designed to efficiently manage and respond to state changes in a DeexStore. It listens to updates from the store and rebuilds its UI based on the new state. This widget providing a convenient way to separate business logic from the UI.
+
+
+### Advantages of Using DeexConsumer
+
+1. Separation of Concerns: DeexConsumer helps in maintaining a clear separation between the business logic and the UI. This makes the code more maintainable and easier to understand.
+
+2. Reactive Updates: By listening to changes in the DeexStore, DeexConsumer ensures that the UI is always up-to-date with the latest state, providing a reactive programming model.
+
+3. Selective Listening: DeexConsumer allows you to specify which parts of the state to listen to using the listenIds parameter. This can help in optimizing performance by reducing unnecessary rebuilds.
+
+4. Easy State Management: It simplifies state management in Flutter applications by providing a straightforward and consistent way to handle state changes and update the UI accordingly.
+
+### Usage Example
+
+Here's an example of how you might use the `DeexConsumer` in your application:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:deex/deex.dart';
+
+class CounterStore extends DeexStore {
+  int _count = 0;
+
+  int get count => _count;
+
+  void increment() {
+    _count++;
+    update();
+  }
+}
+
+class CounterPage extends StatelessWidget {
+  final CounterStore store = CounterStore();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Counter')),
+      body: Center(
+        child: DeexConsumer<CounterStore>(
+          store: store,
+          builder: (context, store) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('You have pushed the button this many times:'),
+                Text('${store.count}', style: Theme.of(context).textTheme.headline4),
+              ],
+            );
+          },
+          listener: (store) {
+            print('Store updated: ${store.count}');
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: store.increment,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: CounterPage(),
+  ));
+}
+```
+
+
+## Notifiers
+
+### ListNotifierSingle
+
+The `ListNotifierSingle` is a notifier that allows you to add, remove, and check for individual listeners. It is useful for managing state changes where only a single listener needs to be notified of updates.
+
+
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> {
+  final ListNotifierSingle _notifier = ListNotifierSingle();
+
+  @override
+  void initState() {
+    super.initState();
+    _notifier.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _notifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        _notifier.refresh();
+      },
+      child: Text('Refresh'),
+    );
+  }
+}
+```
+
+### ListNotifierGroup
+
+The `ListNotifierGroup` is a notifier that supports managing groups of listeners identified by unique IDs. It is useful for scenarios where you need to manage and notify multiple listeners, organized by specific categories or groups.
+
+```dart
+class MyGroupWidget extends StatefulWidget {
+  @override
+  _MyGroupWidgetState createState() => _MyGroupWidgetState();
+}
+
+class _MyGroupWidgetState extends State<MyGroupWidget> {
+  final ListNotifierGroup _notifier = ListNotifierGroup();
+
+  @override
+  void initState() {
+    super.initState();
+    _notifier.addListenerId('button1', () {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _notifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            _notifier.refreshGroup('button1');
+          },
+          child: Text('Refresh Button 1'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            _notifier.refreshGroup('button2');
+          },
+          child: Text('Refresh Button 2'),
+        ),
+      ],
+    );
+  }
+}
+```
+
 ## License
 This project is licensed under the MIT license - see the LICENSE file for more details.
 
